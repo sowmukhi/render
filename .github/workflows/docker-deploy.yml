@@ -19,9 +19,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build JAR with Maven
-        run: mvn clean package --file pom.xml
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 

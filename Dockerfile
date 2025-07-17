@@ -1,12 +1,11 @@
-# Use Eclipse Temurin Java 17 base image (lightweight and production-ready)
-FROM eclipse-temurin:17-jdk-alpine
-
-# Set the working directory inside the container
+# Use a Maven image to build the project
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY . .
+RUN mvn clean package -DskipTests
 
-# Copy the JAR file from the target folder to the image
-ARG JAR_FILE=target/*.jar
-COPY ${JAR_FILE} app.jar
-
-# Run the JAR file
+# Use a lightweight runtime image
+FROM eclipse-temurin:17-jdk-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
